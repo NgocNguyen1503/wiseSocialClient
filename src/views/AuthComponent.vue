@@ -322,7 +322,11 @@ import axios from 'axios';
            */
           async register() {
               try {
-                  const callRegisterAPI = await axios.post('/register', {
+                  const callRegisterAPI = await axios.post('http://localhost/wise_social_api/public/api/register', {
+                    name:this.registerFullName,
+                    email: this.registerEmail,
+                    password: this.registerPassword,
+                    re_password: this.registerRePassword,
                       // Pass param to header
                   }).then(function (res) {
                       // Api response success
