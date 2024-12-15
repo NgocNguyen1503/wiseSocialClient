@@ -6,6 +6,7 @@ import indexComponent from './views/indexComponent.vue';
 import MyProfileComponent from './views/MyProfileComponent.vue';
 import UserProfileComponent from './views/UserProfileComponent.vue';
 import MessageComponent from './views/MessageComponent.vue';
+import HeaderComponent from './components/HeaderComponent.vue';
 </script>
 
 <template>

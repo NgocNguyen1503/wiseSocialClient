@@ -2611,12 +2611,12 @@ select {
     transform: translateY(-50%);
 }
 
-.sign_in_sec form input {
+.sign_in_sec .form input {
     height: 40px;
 }
 
-.sign_in_sec form input,
-.sign_in_sec form select {
+.sign_in_sec .form input,
+.sign_in_sec .form select {
     width: 100%;
     padding: 0 15px 0 40px;
     color: #b2b2b2;
@@ -2624,12 +2624,12 @@ select {
     border: 1px solid #e5e5e5;
 }
 
-.sign_in_sec form select {
+.sign_in_sec .form select {
     line-height: 40px;
     height: 40px;
 }
 
-.sign_in_sec form button {
+.sign_in_sec .form button {
     color: #ffffff;
     font-size: 16px;
     background-color: #e44d3a;
@@ -7975,4 +7975,12 @@ background: #555;
 }
 .suggestion-usd>span i:hover {
     color: white !important;
+}
+
+.btn-register {
+    margin-top: 10%;
+}
+
+.display-none {
+    display: none;
 }
