@@ -359,6 +359,7 @@ header {
     float: left;
     width: 100%;
     background-color: #e44d3a;
+    z-index: 1 !important;
 }
 
 .header-data {
@@ -2970,8 +2971,7 @@ footer {
 
 .fl-rgt {
     float: right;
-    margin-top: 34px;
-    padding-right: 30px;
+    margin-top: 50px;
 }
 
 /* ================== USER PROFILE =================== */
@@ -5456,9 +5456,8 @@ a:hover {
     float: left;
     width: 100%;
     background-color: #fff;
-    border-left: 1px solid #e4e4e4;
     border-bottom: 1px solid #e4e4e4;
-    border-right: 1px solid #e4e4e4;
+    padding-right: 0;
 }
 
 .msg-title {
@@ -5498,7 +5497,7 @@ a:hover {
     float: left;
     width: 100%;
     overflow: auto;
-    height: 600px;
+    height: 80vh;
 }
 
 .messages-list ul {
@@ -5509,9 +5508,10 @@ a:hover {
 .messages-list ul li {
     float: left;
     width: 100%;
-    padding: 20px;
     border-bottom: 1px solid #eeeeee;
     cursor: pointer;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 .messages-list ul li.active {
@@ -5522,12 +5522,14 @@ a:hover {
     float: left;
     position: relative;
     width: 100%;
+    display: flex;
 }
 
 .usr-ms-img {
     float: left;
-    width: 50px;
+    width: 15%;
     position: relative;
+    margin-top: 5px;
 }
 
 .msg-status {
@@ -5579,19 +5581,19 @@ a:hover {
 
 .usr-mg-info {
     float: left;
-    padding-left: 13px;
+    padding-left: 5px;
     margin-top: 4px;
 }
 
 .usr-mg-info h3 {
     color: #000000;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 600;
 }
 
 .usr-mg-info p {
     color: #686868;
-    font-size: 16px;
+    font-size: 13px;
 }
 
 .usr-mg-info p img {
@@ -7977,10 +7979,167 @@ background: #555;
     color: white !important;
 }
 
-.btn-register {
-    margin-top: 10%;
+#section-chat {
+    position: fixed;
+    right: 0;
+    top: 0px;
+    background: white;
+    min-height: 100%;
+    z-index: 2;
+    padding-left: 0px;
+    padding-right: 0px;
+    width: 15vw;
 }
-
-.display-none {
-    display: none;
+.chat-content-top {
+    margin-top: 5%;
+}
+.chat-head {
+    height: 56px;
+    background-color: #e44d3a;
+}
+.clear-fix {
+    height: 3px;
+    background-color: #e44d3a;
+    margin-top: 3px;
+}
+.font-bold {
+    font-weight: bold
+}
+.friend-item {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+.friend-item .avatar img {
+    width: 100%;
+}
+.chat-box {
+    position: fixed;
+    bottom: 0;
+    right: 15.5%;
+    background: white;
+    height: 40vh;
+    width: 17vw;
+    border: 1px solid #00000030;
+}
+.chat-box-head {
+    width: 100%;
+    background-color: #e44d3a;
+    display: flex;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: white;
+}
+.chat-box-head-friend {
+    width: 90%;
+    vertical-align: middle;
+}
+.chat-box-head-friend .chat-box-friend-avatar {
+    width: 32px;
+    height: 32px;
+    margin-top: 1px;
+    margin-left: 10px;
+    margin-right: 5px;
+    border-radius: 50%;
+}
+.chat-box-head-friend p {
+    margin-top: 5px;
+    margin-left: 10px;
+    font-weight: bold;
+    font-size: 13px;
+    color: white;
+}
+.chat-box-head .chat-box-close {
+    width: 15%;
+    text-align: center;
+}
+.chat-box-head .chat-box-close p {
+    font-size: 15px;
+    margin-top: 10px;
+    margin-left: 10px;
+    color: white;
+}
+.chat-box-head .chat-box-close p:hover {
+    cursor: pointer;
+}
+.chat-box-content {
+    height: 75%;
+    width: 100%;
+    background-color: white;
+    overflow: auto;
+}
+.chat-box-content .my-msg {
+    width: 70%;
+    float: right;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+.chat-box-content .my-msg .send-date {
+    font-size: 10px;
+    font-style: italic;
+    float: right;
+    margin-top: 2px;
+}
+.chat-box-content .my-msg p {
+    background-color: #e44d3a;
+    color: white;
+    font-size: 11px;
+    border-radius: 15px;
+    padding: 10px;
+}
+.chat-box-content .friend-msg {
+    width: 70%;
+    float: left;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+.chat-box-content .friend-msg p {
+    background-color: #efefef;
+    color: #686868;
+    font-size: 11px;
+    border-radius: 15px;
+    padding: 10px;
+}
+.chat-box-content .friend-msg .send-date {
+    font-size: 10px;
+    font-style: italic;
+    float: left;
+    margin-top: 2px;
+}
+.chat-box-send-msg {
+    height: 15%;
+    width: 100%;
+    background-color: ghostwhite;
+}
+.chat-box-send-msg .chat-box-text-field {
+    width: 85%;
+    float: left;
+}
+.cls-text-field {
+    margin-top: 10px;
+    margin-left: 5px;
+}
+.chat-box-send-msg .chat-box-send-btn {
+    width: 15%;
+    float: right;
+    text-align: center;
+}
+.chat-box-send-msg .chat-box-send-btn i {
+    margin-top: 23px;
+}
+.chat-box-send-msg .chat-box-send-btn i:hover {
+    cursor: pointer;
+}
+.section-ads {
+    width: 200px;
+    height: 550px;
+    position: fixed;
+    top: 20%;
+    left: 0;
+    background-color: black;
+}
+.section-ads img {
+    width: 100%;
+    height: 100%;
 }

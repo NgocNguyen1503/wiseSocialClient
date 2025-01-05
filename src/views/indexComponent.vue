@@ -6,6 +6,7 @@ import TimelineComponent from '@/components/TimelineComponent.vue';
 import MostFollowerComponent from '@/components/MostFollowerComponent.vue';
 import MyFavouriteComponent from '@/components/MyFavouriteComponent.vue';
 import friendRequestComponent from '@/components/FriendRequestComponent.vue';
+import ChatComponent from '@/components/ChatComponent.vue';
 </script>
 
 <template>
@@ -61,6 +62,9 @@ import friendRequestComponent from '@/components/FriendRequestComponent.vue';
                                     <!--Request friend People-->
                                     <friendRequestComponent/>
                                     <!--End Request friend People-->
+                                    <!-- Chat Conponent -->
+                                    <ChatComponent/>
+                                    <!-- End Chat Component -->
                                 </div>
                                 <!--right-sidebar end-->
                             </div>
