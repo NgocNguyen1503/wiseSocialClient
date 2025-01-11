@@ -63,7 +63,7 @@ import ChatComponent from '@/components/ChatComponent.vue';
                                     <friendRequestComponent/>
                                     <!--End Request friend People-->
                                     <!-- Chat Conponent -->
-                                    <ChatComponent/>
+                                     <ChatComponent/>
                                     <!-- End Chat Component -->
                                 </div>
                                 <!--right-sidebar end-->
