@@ -111,7 +111,7 @@
              */
             async callAPI() {
                 try {
-                    let callAPI = await axios.get('http://localhost/wise_api2/public/api/my-infor', {
+                    let callAPI = await axios.get('http://localhost/wise_api2/public/api/my-info', {
                         /************ Attach param for request here ***************/
                         headers: {
                             "Content-type" : "application/json",
