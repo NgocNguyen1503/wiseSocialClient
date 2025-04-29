@@ -11,12 +11,13 @@
         <div class="search-bar">
           <form>
             <input
-              v-on:keyup="search()"
+              v-on:keypress="search()"
               type="text"
               name="search"
               placeholder="Search..."
               v-model="keyWord"
             />
+            <button><i class="fa fa-search"></i></button>
           </form>
 
           <div v-if="searchStatus" class="" id="area-chat">
@@ -178,6 +179,7 @@ export default {
       searchStatus: false,
     };
   },
+
   created() {
     /***********************************************************************************************************
      *********************** Initialize data when this component is used. **************************************
@@ -188,7 +190,12 @@ export default {
     /***********************************************************************************************************
      ******************** Once created, the interface is displayed and calls mounted. **************************
      **********************************************************************************************************/
+    document.addEventListener("click", this.handleClickOutside);
   },
+  beforeDestroy() {
+    document.removeEventListener("click", this.handleClickOutside);
+  },
+
   watch: {
     /***********************************************************************************************************
      ********************************* Methods change value for a variable *************************************
@@ -234,31 +241,41 @@ export default {
      ******* Async and await functions for manipulating server-side data through internal API protocols ********
      **********************************************************************************************************/
 
+    handleClickOutside(event) {
+      const areaChat = this.$el.querySelector("#area-chat");
+      if (areaChat && !areaChat.contains(event.target)) {
+        this.searchStatus = false;
+      }
+    },
+    
     /**
      * Call API sample
      */
-     async search() {
-        this.searchStatus = true;
-        try {
-            const callAPI = await axios.get('http://localhost/wise_api2/public/api/search', {
-                /************ Attach param for request here ***************/
-                headers: {
-                    "Content-type" : "application/json",
-                    "Authorization": "Bearer " + this.token 
-                },
-                params: {
-                    'key-word': this.keyWord
-                }
-            });
-            if (callAPI.data.code == 200) {
-                this.users = callAPI.data.data;
-            } else {
-                alert("Call api failed, please check again!");
-            }
-        } catch (err) {
-            console.log(err);
+    async search() {
+      this.searchStatus = true;
+      try {
+        const callAPI = await axios.get(
+          "http://localhost/wisesocial_api/public/api/search",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + this.token,
+            },
+            params: {
+              "key-word": this.keyWord,
+            },
+          }
+        );
+        if (callAPI.data.code == 200) {
+          this.users = callAPI.data.data;
+        } else {
+          alert("Call API failed, please check again!");
         }
-    }
+        console.log(callAPI.data);
+      } catch (err) {
+        console.log(err);
+      }
+    },
   },
 };
 </script>

@@ -1,12 +1,10 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import DemoComponent from './components/DemoComponent.vue'; 
-import AuthComponent from './views/AuthComponent.vue';
-import indexComponent from './views/indexComponent.vue';
-import MyProfileComponent from './views/MyProfileComponent.vue';
-import UserProfileComponent from './views/UserProfileComponent.vue';
-import MessageComponent from './views/MessageComponent.vue';
-import HeaderComponent from './components/HeaderComponent.vue';
+import { RouterLink, RouterView } from "vue-router";
+import AuthComponent from "./views/AuthComponent.vue";
+import IndexComponent from "./views/IndexComponent.vue";
+import MessageComponent from "./views/MessageComponent.vue";
+import MyProfileComponent from "./views/MyProfileComponent.vue";
+import UserProfileComponent from "./views/UserProfileComponent.vue";
 </script>
 
 <template>
@@ -14,25 +12,25 @@ import HeaderComponent from './components/HeaderComponent.vue';
     <div class="wrapper">
       <nav>
         <RouterLink to="/auth">Login & Register</RouterLink>
-        <RouterLink to="/index">index</RouterLink>
-        <RouterLink to="/my-profile">My Profile</RouterLink>
-        <RouterLink to="/user-profile">User Profile</RouterLink>
-        <RouterLink to="/message">Message</RouterLink>
+        <RouterLink to="/index">Index</RouterLink>
+        <RouterLink to="/messages">Messages</RouterLink>
+        <RouterLink to="/myprofile">My Profile</RouterLink>
+        <RouterLink to="/userprofile">User Profile</RouterLink>
       </nav>
     </div>
   </header> -->
 
-  <RouterView/>
+  <RouterView />
 </template>
+
 <script>
 export default {
   methods: {
-    clickMe(data) {
+    clickMe() {
       alert(0);
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

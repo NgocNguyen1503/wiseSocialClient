@@ -1,4 +1,8 @@
 <template>
+  <!-- <div class="row">
+    <h1>Login and register</h1>
+  </div> -->
+
   <div class="wrapper">
     <div class="sign-in-page">
       <div class="signin-popup">
@@ -7,111 +11,207 @@
             <div class="col-lg-6">
               <div class="cmp-info">
                 <div class="cm-logo">
-                  <img src="/src/assets/images/cm-logo.png" alt="">
+                  <img src="/src/assets/images/cm-logo.png" alt="" />
                 </div>
                 <!--cm-logo end-->
-                <img src="/src/assets/images/cm-main-img.png" alt="">
+                <img src="/src/assets/images/cm-main-img.png" alt="" />
               </div>
               <!--cmp-info end-->
             </div>
             <div class="col-lg-6">
               <div class="login-sec">
                 <ul class="sign-control">
-                  <li data-tab="tab-1" v-on:click="chooseType('login')" :class="{ current: choseType == 'login' }"><a
-                      href="#" title="">サインイン</a></li>
-                  <li data-tab="tab-2" v-on:click="chooseType('register')" :class="{ current: choseType == 'register' }">
-                    <a href="#" title="">サインアップ</a></li>
+                  <li
+                    data-tab="tab-1"
+                    v-on:click="chooseType('login')"
+                    :class="{ current: choseType == 'login' }"
+                  >
+                    <!-- if click on login, then add class current -->
+                    <a href="#" title="">Sign In</a>
+                  </li>
+                  <li
+                    data-tab="tab-2"
+                    v-on:click="chooseType('register')"
+                    :class="{ current: choseType == 'register' }"
+                  >
+                    <!-- if click on register, then add class current -->
+                    <a href="#" title="">Sign Up</a>
+                  </li>
                 </ul>
-                <div class="sign_in_sec" :class="{ current: choseType == 'login' }" id="tab-1">
-                  <h3>サインイン</h3>
+                <div
+                  class="sign_in_sec"
+                  id="tab-1"
+                  :class="{ current: choseType == 'login' }"
+                >
+                  <h3>Sign In</h3>
                   <div class="form">
                     <div class="row">
                       <div class="col-lg-12 no-pdd">
                         <div class="sn-field">
-                          <input type="text" name="email" placeholder="メール" v-model="loginEmail">
-                          <i class="fa fa-user"></i>
-                          <span class="text-danger msgError">{{ loginErrEmailMsg }}</span>
+                          <input
+                            type="text"
+                            name="email"
+                            placeholder="Email"
+                            v-model="loginEmail"
+                          />
+                          <span class="text-danger msgError">{{
+                            loginErrEmailMsg
+                          }}</span>
+                          <i class="fa fa-envelope"></i>
                         </div>
                         <!--sn-field end-->
                       </div>
                       <div class="col-lg-12 no-pdd">
                         <div class="sn-field">
-                          <input type="password" name="password" placeholder="Password" v-model="loginPassword">
+                          <input
+                            type="password"
+                            name="password"
+                            placeholder="Password"
+                            v-model="loginPassword"
+                          />
                           <i class="fa fa-lock"></i>
-                          <span class="text-danger msgError">{{ loginErrEmailMsg }}</span>
+                          <span class="text-danger msgError">{{
+                            loginErrPasswordMsg
+                          }}</span>
                         </div>
                       </div>
                       <div class="col-lg-12 no-pdd">
-                        <button type="submit" value="submit" v-on:click="login()">サインイン</button>
+                        <button
+                          type="submit"
+                          value="submit"
+                          v-on:click="login()"
+                        >
+                          Sign In
+                        </button>
                       </div>
                     </div>
                   </div>
                   <!--login-resources end-->
                 </div>
                 <!--sign_in_sec end-->
-                <div class="sign_in_sec" :class="{ current: choseType == 'register' }" id="tab-2">
+                <div
+                  class="sign_in_sec"
+                  id="tab-2"
+                  :class="{ current: choseType == 'register' }"
+                >
+                  <h3>Sign Up</h3>
                   <!--signup-tab end-->
                   <div class="dff-tab current" id="tab-3">
                     <div class="form">
                       <div class="row">
                         <div class="col-lg-12 no-pdd">
                           <div class="sn-field">
-                            <input type="email" name="email" v-model="registerEmail" placeholder="メール">
+                            <input
+                              type="email"
+                              name="email"
+                              placeholder="Email"
+                              v-model="registerEmail"
+                            />
                             <i class="fa fa-envelope"></i>
-                            <span class="text-danger msgError">{{ registerErrEmailMsg }}</span>
+                            <span class="text-danger msgError">{{
+                              registerErrorEmailMsg
+                            }}</span>
                           </div>
                         </div>
                         <div class="col-lg-12 no-pdd">
                           <div class="sn-field">
-                            <input type="text" name="name" v-model="registerFullName" placeholder="氏名">
+                            <input
+                              type="text"
+                              name="name"
+                              placeholder="Full Name"
+                              v-model="registerFullName"
+                            />
                             <i class="fa fa-user"></i>
-                            <span class="text-danger msgError">{{ registerErrFullNameMsg
+                            <span class="text-danger msgError">{{
+                              registerErrorFullNameMsg
                             }}</span>
                           </div>
                         </div>
                         <div class="col-lg-12 no-pdd">
                           <div class="sn-field">
-                            <input type="text" name="country" v-model="registerCountry" placeholder="国">
+                            <input
+                              type="text"
+                              name="country"
+                              placeholder="Country"
+                              v-model="registerCountry"
+                            />
                             <i class="fa fa-globe"></i>
-                            <span class="text-danger msgError">{{ registerErrCountryMsg
+                            <span class="text-danger msgError">{{
+                              registerErrorCountryMsg
                             }}</span>
                           </div>
                         </div>
                         <div class="col-lg-12 no-pdd">
                           <div class="sn-field">
-                            <input type="password" v-model="registerPassword" name="password" placeholder="Password">
+                            <input
+                              type="password"
+                              name="password"
+                              placeholder="Password"
+                              v-model="registerPassword"
+                            />
                             <i class="fa fa-lock"></i>
-                            <span class="text-danger msgError">{{ registerErrPasswordMsg
+                            <span class="text-danger msgError">{{
+                              registerErrorPasswordMsg
                             }}</span>
                           </div>
                         </div>
                         <div class="col-lg-12 no-pdd">
                           <div class="sn-field">
-                            <input type="password" v-model="registerRePassword" name="repeat-password"
-                              placeholder="Repeat Password">
+                            <input
+                              type="password"
+                              name="repeat-password"
+                              placeholder="Repeat Password"
+                              v-model="registerRePassword"
+                            />
                             <i class="fa fa-lock"></i>
-                            <span class="text-danger msgError">{{ registerErrRePasswordMsg
+                            <span class="text-danger msgError">{{
+                              registerErrorRePasswordMsg
                             }}</span>
                           </div>
                         </div>
                         <div class="col-lg-12 no-pdd">
                           <div class="checky-sec st2">
                             <div class="fgt-sec">
-                              <input type="checkbox" v-on:click="registerCheckAllow()"
-                                :checked="this.registerTOS === true" name="cc" id="c2">
+                              <input
+                                type="checkbox"
+                                onclick="registerCheckAllow()"
+                                :checked="this.registerToS === true"
+                                name="cc"
+                                id="c2"
+                                v-model="registerToS"
+                              />
                               <label for="c2">
                                 <span></span>
                               </label>
-                              <small>はい、Wise の利用規約を理解し、同意します。</small>
+                              <small>
+                                I understand and accept Wise Social's Term of
+                                Service.</small
+                              >
                             </div>
                             <!--fgt-sec end-->
                           </div>
                         </div>
                         <div class="col-lg-12 no-pdd row">
-                          <button :class="{ 'cursor-not-allow': this.registerTOS === false }"
-                            :disabled="this.registerTOS === false" v-on:click="registerValidation()">開始する</button>
-                          <img class="btn-register" :class="{ 'display-none': this.registerProcess === false }"
-                            width="40px" height="40px" src="/src/assets/images/ezgif-3-090377b993.gif" alt="" srcset="">
+                          <button
+                            :class="{
+                              'cursor-not-allowed': this.registerToS == false,
+                            }"
+                            :disabled="this.registerToS === false"
+                            v-on:click="registerValidation()"
+                          >
+                            Sign Up
+                          </button>
+                          <img
+                            class="btn-register"
+                            :class="{
+                              'display-none': this.registerProcessing === false,
+                            }"
+                            width="40px"
+                            height="40px"
+                            src="/src/assets/loading.gif"
+                            alt=""
+                            srcset=""
+                          />
                         </div>
                       </div>
                     </div>
@@ -130,46 +230,54 @@
 </template>
 
 <script>
-import axios from 'axios';
+// import Vue from 'vue'
+import axios from "axios";
 
-//import Vue from 'vue'
-//import axios from 'axios'
+import { requestPermission } from "../firebase"; // Import firebase settings
+
 // import component1 from 'component1'
 // import component2 from 'component2'
 
+// bat dau phan than cua chuong trinh vuejs
 export default {
   /***********************************************************************************************************
    ******************************* Pass data to child component **********************************************
    **********************************************************************************************************/
-  props: ["txtMSG"],
+  // props: ["txtMSG"],
   // components: {component1, component2},
   data() {
     /***********************************************************************************************************
      ******************************* Initialize global variables ***********************************************
      **********************************************************************************************************/
     return {
-      msg: 'Tôi là thành phần con.',
-      choseType: 'login',
-      registerEmail: '',
-      registerErrEmailMsg: '',
-      registerPassword: '',
-      registerErrPasswordMsg: '',
-      registerCountry: '',
-      registerErrCountryMsg: '',
-      registerFullName: '',
-      registerErrFullNameMsg: '',
-      registerRePassword: '',
-      registerErrRePasswordMsg: '',
-      registerTOS: false,
-      registerProcess: false,
-      // For login form
-      loginEmail: '',
-      loginPassword: '',
-      loginTOS: false,
-      loginProcess: false,
-      loginErrEmailMsg: '',
-      loginErrPasswordMsg: ''
-    }
+      choseType: "login", // default to login screen
+
+      // default register variables
+      registerEmail: "",
+      registerPassword: "",
+      registerRePassword: "",
+      registerFullName: "",
+      registerCountry: "",
+      registerToS: false,
+      registerProcessing: false,
+
+      // login
+      loginEmail: "",
+      loginPassword: "",
+      loginToS: false,
+      loginErrEmailMsg: "",
+      loginErrPasswordMsg: "",
+      loginProcessing: false,
+      token: null,
+
+      // error messages
+      registerErrorEmailMsg: "",
+      registerErrorPasswordMsg: "",
+      registerErrorRePasswordMsg: "",
+      registerErrorFullNameMsg: "",
+      registerErrorCountryMsg: "",
+      // registerErrorToSMsg: 'You must accept Term of Service.',
+    };
   },
   /**
    * Define global service socket
@@ -185,7 +293,10 @@ export default {
     // Listen event from server and render data
     ServerSendCommentToClient: function (responseComment) {
       // Push to the comment list
-      if (responseComment.type === 'comment' && this.transaction.id == responseComment.transaction_id) {
+      if (
+        responseComment.type === "comment" &&
+        this.transaction.id == responseComment.transaction_id
+      ) {
         this.pushCommentToList(responseComment);
         this.$forceUpdate();
       }
@@ -195,8 +306,9 @@ export default {
     /***********************************************************************************************************
      *********************** Initialize data when this component is used. **************************************
      **********************************************************************************************************/
-    console.log('Init created component and call to function get data from api server.');
-    this.joinRoom();
+    console.log(
+      "Init created component and call to function get data from api server."
+    );
   },
   mounted() {
     /***********************************************************************************************************
@@ -208,13 +320,21 @@ export default {
      ********************************* Methods change value for a variable *************************************
      **********************************************************************************************************/
     msg() {
-      console.log("When the value of the msg variable changes, this method will be executed.");
-    }
+      console.log(
+        "When the value of the msg variable changes, this method will be executed."
+      );
+    },
+    token() {
+      alert(this.token);
+    },
   },
   computed: {
     appendMsg() {
-      return msg + "Process the value and assign the value to the corresponding variable the var has changed.";
-    }
+      return (
+        msg +
+        "Process the value and assign the value to the corresponding variable the var has changed."
+      );
+    },
   },
   methods: {
     /***********************************************************************************************************
@@ -227,15 +347,24 @@ export default {
     defaultFunction() {
       this.msg = "Replace message here!";
     },
-    // Join a room
-    joinRoom() {
-      this.$socket.emit('ClientSendCommentToServer', {
-        // Pass param obj
-        transaction_id: 1
-      });
-    },
+
+    // leaveRoom() {
+    //   this.$socket.emit("ClientSendCommentToServer", {
+    //     transaction_id: this.transaction.id,
+    //     // Pass param obj]
+    //   });
+    // },
+    // // Join a room
+    // joinRoom() {
+    //   this.$socket.emit("ClientSendCommentToServer", {
+    //     // Pass param obj
+    //     // transaction_id: this.transaction.id,
+    //     transaction_id: 1,
+    //   });
+    // },
+
     /**
-     * Example default function using param 
+     * Example default function using param
      *
      * @param int pageNum number of page
      * @return boolean
@@ -246,89 +375,92 @@ export default {
     },
 
     /**
-     * Default local function chose login or register
-     * 
-     * @param type string 'login' or 'register'
-     */
-    chooseType(type) {
-      this.choseType = type;
-    },
-
-    /**
-     * Validate function.
-     * 
-     * Show msg error or endable button register
-     * Call to function register and send data to server.
+     * Validate function for form
+     * Show msg error if form is invalid
+     * Enable submit button
+     * Call to register function then send data to server
      */
     registerValidation() {
-      // Validate email
-      if (this.registerEmail == '') {
-        this.registerErrEmailMsg = 'Email ユーザ名を入力してください。';
+      // validate email
+      if (this.registerEmail == "") {
+        this.registerErrorEmailMsg = "Use a correct email.";
       } else {
-        this.registerErrEmailMsg = '';
+        this.registerErrorEmailMsg = "";
       }
-      // Validate FullName
-      if (this.registerFullName == '') {
-        this.registerErrFullNameMsg = '氏名 ユーザ名を入力してください。';
+      // validate full name
+      if (this.registerFullName == "") {
+        this.registerErrorFullNameMsg = "Use a correct full name.";
       } else {
-        this.registerErrFullNameMsg = '';
+        this.registerErrorFullNameMsg = "";
       }
-      // Validate country
-      if (this.registerCountry == '') {
-        this.registerErrCountryMsg = '国 ユーザ名を入力してください。';
-      } else if (this.registerCountry.length < 4) {
-        this.registerErrCountryMsg = '国名は 3 文字以上である必要があります';
+      // validate country
+      if (this.registerCountry.length < 4) {
+        this.registerErrorCountryMsg = "Use a correct country.";
       } else {
-        this.registerErrCountryMsg = '';
+        this.registerErrorCountryMsg = "";
       }
-      // Validate password
-      if (this.registerPassword == '') {
-        this.registerErrPasswordMsg = 'Password ユーザ名を入力してください。';
-      } else if (this.registerPassword < 8) {
-        this.registerErrPasswordMsg = 'Password 名は 8 文字以上である必要があります';
+      // validate password
+      if (this.registerPassword == "") {
+        this.registerErrorPasswordMsg = "Use a correct password.";
+      } else if (this.registerPassword.length < 8) {
+        this.registerErrorPasswordMsg = "Minimum 8 characters required.";
       } else {
-        this.registerErrPasswordMsg = '';
+        this.registerErrorPasswordMsg = "";
       }
-      // Validate Repassword
-      if (this.registerPassword != this.registerRePassword) {
-        this.registerErrRePasswordMsg = '確認用パスワードが間違っています。';
+      // validate re-password
+      if (this.registerRePassword != this.registerPassword) {
+        this.registerErrorRePasswordMsg = "Password not match.";
       } else {
-        this.registerErrRePasswordMsg = '';
+        this.registerErrorRePasswordMsg = "";
       }
-      // Check all var error
+
+      // call to register function
       if (
-        this.registerErrRePasswordMsg == '' && this.registerErrPasswordMsg == '' &&
-        this.registerErrCountryMsg == '' && this.registerErrFullNameMsg == '' &&
-        this.registerErrEmailMsg == ''
+        this.registerErrorEmailMsg == "" &&
+        this.registerErrorPasswordMsg == "" &&
+        this.registerErrorRePasswordMsg == "" &&
+        this.registerErrorFullNameMsg == "" &&
+        this.registerErrorCountryMsg == ""
       ) {
-        // Call to server
         this.register();
       }
       return null;
     },
 
     registerCheckAllow() {
-      if (this.registerTOS === true) {
-        this.registerTOS = false;
-      } else if (this.registerTOS === false) {
-        this.registerTOS = true;
+      if (this.registerToS === true) {
+        this.registerToS = false;
+      } else if (this.registerToS === false) {
+        this.registerToS = true;
       }
     },
 
     login() {
       if (this.loginEmail.length <= 0) {
-        this.loginErrEmailMsg = 'Email アドレスを入力してください。';
+        this.loginErrEmailMsg = "Email is required.";
       } else {
-        this.loginErrEmailMsg = '';
+        this.loginErrEmailMsg = "";
       }
-      if (this.loginPassword.length <= 0) {
-        this.loginErrPasswordMsg = 'Password を入力してください。';
+
+      if (this.loginPassword.length < 8) {
+        this.loginErrPasswordMsg = "Password is required.";
       } else {
-        this.loginErrPasswordMsg = '';
+        this.loginErrPasswordMsg = "";
       }
-      if (this.loginErrEmailMsg == '' && this.loginErrPasswordMsg == '') {
+
+      if (this.loginErrEmailMsg == "" && this.loginErrPasswordMsg == "") {
+        // Call to login function
         this.processLogin();
       }
+    },
+
+    /**
+     * Default function to choose login or register
+     *
+     * @param type string "login" or "register"
+     */
+    chooseType(type) {
+      this.choseType = type;
     },
 
     /***********************************************************************************************************
@@ -340,7 +472,7 @@ export default {
      */
     async callAPI() {
       try {
-        const callAPI = await axios.get('/apiendpoint', {
+        const callAPI = await axios.get("/apiendpoint", {
           /************ Attach param for request here ***************/
         });
         console.log(callAPI.data);
@@ -350,87 +482,114 @@ export default {
     },
 
     /**
-     * Async await function register
-     * 
-     * Call to api endpoint /register
-     * Method post pass param
-     * Regirect router /auth
+     * Async/await for register function
+     *
+     * Call to /register endpoint
+     * Method: POST pass param
+     * Redirect route /auth
      */
     async register() {
-      // Disabled button register
+      // Disable register button while processing
       this.registerCheckAllow();
-      this.registerProcess = true;
+      this.registerProcessing = true;
+
       try {
-        const callRegisterAPI = await axios.post('http://localhost/wise_api2/public/api/register', {
-          // Pass param to header
-          name: this.registerFullName,
-          email: this.registerEmail,
-          password: this.registerPassword,
-          re_password: this.registerRePassword
-        }).then(function (res) {
-          // Api response success
-          if (res.data.code == 200) {
-            window.location.reload();
-          } else {
-            alert(res.data.message);
-          }
-        }).catch(function (err) {
-          // API response error code
-          alert(err);
-        });
+        const callRegisterAPI = await axios
+          .post("http://localhost/wise_social_api/public/api/register", {
+            // Pass param to header
+            name: this.registerFullName,
+            email: this.registerEmail,
+            password: this.registerPassword,
+            re_password: this.registerRePassword,
+          })
+          .then(function (res) {
+            // Api response success
+            if (res.data.code == 200) {
+              window.location.reload();
+            } else {
+              alert(res.data.message);
+            }
+          })
+          .catch(function (err) {
+            // API response error code
+            alert(err);
+          });
       } catch (err) {
         // Call to api failed
         console.log(err);
       }
-      // Enabled button register
+      // Re-enable register button
       this.registerCheckAllow();
-      this.registerProcess = false;
+      this.registerProcessing = false;
     },
 
     /**
-     * Async await function register
-     * 
-     * Call to api endpoint /register
-     * Method post pass param
-     * Regirect router /auth
+     * Async/await for login function
+     *
+     * Call to /login endpoint
+     * Method: POST pass param
+     * Redirect route /index
      */
     async processLogin() {
-      // Disabled button register
-      this.loginProcess = true;
+      // Disable register button while processing
+      this.loginProcessing = true;
+
       try {
-        const callLoginAPI = await 
-        axios.post('http://localhost/wise_api2/public/api/login', {
-          // Pass param to header
-          email: this.loginEmail,
-          password: this.loginPassword,
-        }).then(function (res) {
-          // Api response success
-          if (res.data.code == 200) {
-            // console.log(res.data.data.plainTextToken);
+        const callLoginAPI = await axios
+          .post("http://localhost/wise_social_api/public/api/login", {
+            // Pass param to header
+            email: this.loginEmail,
+            password: this.loginPassword,
+          })
+          .then(function (res) {
+            // Api response success
+            if (res.data.code == 200) {
+              // Save token to session storage
+              sessionStorage.setItem("token", res.data.data.plainTextToken);
 
-            // Save to session storage
-            sessionStorage.setItem("token", res.data.data.plainTextToken);
-
-            window.location.href = "/index";
-          } else {
-            alert(res.data.message);
-          }
-        }).catch(function (err) {
-          // API response error code
-          alert(err);
-        });
+              // Request notification permission when the app starts.
+              requestPermission()
+                .then((fcmToken) => {
+                  // Using axios call to server add token to DB
+                  axios
+                    .get(
+                      "http://localhost/wise_social_api/public/api/setDeviceToken",
+                      {
+                        headers: {
+                          "Content-Type": "application/json",
+                          Authorization:
+                            "Bearer " + res.data.data.plainTextToken,
+                        },
+                        params: {
+                          // Pass param to header
+                          fcmToken: fcmToken,
+                        },
+                      }
+                    )
+                    .then(function () {
+                      window.location.href = "/index";
+                    });
+                })
+                .catch((err) => {
+                  console.error("Get token error: ", err);
+                });
+            } else {
+              alert(res.data.message);
+            }
+          })
+          .catch(function (err) {
+            // API response error code
+            alert(err);
+          });
       } catch (err) {
         // Call to api failed
         console.log(err);
       }
-      // Enabled button register
-      this.registerCheckAllow();
-      this.registerProcess = false;
-    }
+      // Re-enable button
+      this.registerProcessing = false;
+    },
   },
-
-
-}
+};
 </script>
 
 <style>
@@ -439,10 +598,9 @@ export default {
 */
 .msgError {
   font-size: 10px !important;
-  right: 0px !important;
+  right: 5px !important;
 }
-
-.cursor-not-allow {
+.cursor-not-allowed {
   cursor: not-allowed !important;
 }
 </style>

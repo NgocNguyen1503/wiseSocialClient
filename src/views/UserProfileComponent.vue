@@ -1,8 +1,5 @@
 <template>
-    <div class="row">
-        <h1>
-            User profile
-        </h1>
-    </div>
+  <div class="row">
+    <h1>User Profile</h1>
+  </div>
 </template>
-

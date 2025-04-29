@@ -1,28 +1,29 @@
-import './assets/main.css'
+import "./assets/main.css";
 
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
-// import vue socket.io library
-import VueSocketIO from 'vue-3-socket.io'
-import SocketIO from 'socket.io-client';
+import { createApp } from "vue";
+import App from "./App.vue";
+import router from "./router";
 
-const app = createApp(App)
+import VueSocketIO from "vue-3-socket.io";
+import SocketIO from "socket.io-client";
 
-app.use(new VueSocketIO({
+const app = createApp(App);
+
+app.use(
+  new VueSocketIO({
     debug: true,
     connection: SocketIO("http://127.0.0.1:3000"),
     // vuex: {
-    //     store,
-    //     actionPrefix: 'SOCKET_',
-    //     mutationPrefix: 'SOCKET_'
-    
+    //   store,
+    //   actionPrefix: "SOCKET_",
+    //   mutationPrefix: "SOCKET_",
     // },
     options: {
-        path: "/socket.io"
-    }
-}));
+      path: "/socket.io",
+    },
+  })
+);
 
-app.use(router)
+app.use(router);
 
-app.mount('#app')
+app.mount("#app");
