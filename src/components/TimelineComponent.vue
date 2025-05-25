@@ -114,8 +114,9 @@
 									</div>
 									<!--comment-list end-->
 									<!-- Reply begin -->
-									<ul v-for="post_child_comment in post_comment.child">
-										<li>
+									<ul>
+										<li v-for="post_child_comment in post_comment.child"
+											v-bind:key="post_child_comment.id">
 											<div class="comment-list">
 												<div class="bg-img">
 													<img width="36px" v-if="post_child_comment.author._avatar != null"
@@ -171,376 +172,425 @@
 </template>
 
 <script>
-	//import Vue from 'vue'
-	import axios from 'axios'
-	// import component1 from 'component1'
-	// import component2 from 'component2'
+//import Vue from 'vue'
+import axios from 'axios'
+// import component1 from 'component1'
+// import component2 from 'component2'
 
-	export default {
-		/**
-		 * Define global service socket
-		 *
-		 * Listing event from socket.io server
-		 * "ServerSendCommentToClient" is the name of the channel that sends notifications to all clients installed in the server socket
-		 */
-		sockets: {
-			// Send data to server
-			ClientSendCommentToServer: function (responseComment) {
-				this.comment = responseComment;
-			},
-			// Listen event from server and render data
-			ServerSendCommentToClient: function (responseComment) {
-				// Push to the comment list
-				if (responseComment.type === 'comment' && this.transaction.id == responseComment.transaction_id) {
-					this.pushCommentToList(responseComment);
-					this.$forceUpdate();
-				}
-			},
+export default {
+	/**
+	 * Define global service socket
+	 *
+	 * Listing event from socket.io server
+	 * "ServerSendCommentToClient" is the name of the channel that sends notifications to all clients installed in the server socket
+	 */
+	sockets: {
+		// Send data to server
+		ClientSendMessageToServer: function (responseComment) {
+			this.comment = responseComment;
 		},
+		// Listen event from server and render data
+		ServerSendMessageToClient: function (responseComment) {
+			console.log(responseComment);
+			// Push to the comment list
+			if (responseComment.type === 'comment') {
+				// Process comment
+				// this.pushCommentToList(responseComment);
+				console.log(responseComment);
+				if (parseInt(responseComment.parent_id) == 0) {
+					// Add parent comment and show list comment
+					this.comments.push(responseComment);
+				} else {
+					// append child comment to parent
+					for (let i = 0; i < this.comments.length; i++) {
+						if (this.comments[i].id == parseInt(responseComment.parent_id)) {
+							if (Array.isArray(this.comments[i].child)) {
+								// Đẩy vào mảng có sẵn
+								this.comments[i].child.push(responseComment);
+							} else {
+								// Tạo mảng child mới (giữ reactive)
+								this.comments[i] = {
+									...this.comments[i],
+									child: [responseComment]
+								};
+							}
+							break;
+						}
+					}
+				}
+				// Force Vue render if necessary
+				this.list_comment = [...this.list_comment];
+				// update all components
+				this.$forceUpdate();
+			} else if (responseComment.type === 'message') {
+				// Process message
+
+			} else {
+				console.log("Socket error!");
+			}
+		},
+	},
+	/***********************************************************************************************************
+	 ******************************* Pass data to child component **********************************************
+	 **********************************************************************************************************/
+	// props: [variable1, variable2],
+	// components: {component1, component2},
+	data() {
 		/***********************************************************************************************************
-		 ******************************* Pass data to child component **********************************************
+		 ******************************* Initialize global variables ***********************************************
 		 **********************************************************************************************************/
-		// props: [variable1, variable2],
-		// components: {component1, component2},
-		data() {
-			/***********************************************************************************************************
-			 ******************************* Initialize global variables ***********************************************
-			 **********************************************************************************************************/
-			return {
-				msg: 'Hello world!',
-				users: [],
-				posts: "",
-				postImage: null,
-				token: sessionStorage.getItem("token"),
-				offset: 0,
-				limit: 6,
-				timelinePost: [],
-				showReadMore: [],
-				selectedShowComment: null,
-				commentOffset: 0,
-				commentLimit: 6,
-				comments: [],
-				comment: "",
-				parent: 0,
-				replyingTo: null
+		return {
+			msg: 'Hello world!',
+			users: [],
+			posts: "",
+			postImage: null,
+			token: sessionStorage.getItem("token"),
+			offset: 0,
+			limit: 6,
+			timelinePost: [],
+			showReadMore: [],
+			selectedShowComment: null,
+			commentOffset: 0,
+			commentLimit: 6,
+			comments: [],
+			comment: "",
+			parent: 0,
+			replyingTo: null
+		}
+	},
+	created() {
+		/***********************************************************************************************************
+		 *********************** Initialize data when this component is used. **************************************
+		 **********************************************************************************************************/
+		console.log('Init created component and call to function get data from api server.');
+		this.timeLine();
+	},
+	mounted() {
+		/***********************************************************************************************************
+		 ******************** Once created, the interface is displayed and calls mounted. **************************
+		 **********************************************************************************************************/
+	},
+	watch: {
+		/***********************************************************************************************************
+		 ********************************* Methods change value for a variable *************************************
+		 **********************************************************************************************************/
+		msg() {
+			console.log("When the value of the msg variable changes, this method will be executed.");
+		}
+	},
+	computed: {
+		appendMsg() {
+			return msg + "Process the value and assign the value to the corresponding variable the var has changed.";
+		}
+	},
+	methods: {
+		/***********************************************************************************************************
+		 ******************************* Default functions that handle local data **********************************
+		 **********************************************************************************************************/
+
+		/**
+		 * Example default function not using param
+		 */
+		defaultFunction() {
+			this.msg = "Replace message here!";
+		},
+
+		readMore(postId) {
+			this.showReadMore.push(postId);
+		},
+
+		chooseImage(event) {
+			let file = event.target.files[0];
+			console.log(file);
+			if (file.type != 'image/jpeg' && file.type != 'image/jpg') {
+				alert("ファイル形式は「png」または「jpg」を選択してください。");
+				return null;
 			}
-		},
-		created() {
-			/***********************************************************************************************************
-			 *********************** Initialize data when this component is used. **************************************
-			 **********************************************************************************************************/
-			console.log('Init created component and call to function get data from api server.');
-			this.timeLine();
-		},
-		mounted() {
-			/***********************************************************************************************************
-			 ******************** Once created, the interface is displayed and calls mounted. **************************
-			 **********************************************************************************************************/
-		},
-		watch: {
-			/***********************************************************************************************************
-			 ********************************* Methods change value for a variable *************************************
-			 **********************************************************************************************************/
-			msg() {
-				console.log("When the value of the msg variable changes, this method will be executed.");
+			if (file.size > 2048000) {
+				alert("最大ファイル「2mb」");
 			}
+			this.postImage = file;
 		},
-		computed: {
-			appendMsg() {
-				return msg + "Process the value and assign the value to the corresponding variable the var has changed.";
-			}
-		},
-		methods: {
-			/***********************************************************************************************************
-			 ******************************* Default functions that handle local data **********************************
-			 **********************************************************************************************************/
 
-			/**
-			 * Example default function not using param
-			 */
-			defaultFunction() {
-				this.msg = "Replace message here!";
-			},
-
-			readMore(postId) {
-				this.showReadMore.push(postId);
-			},
-
-			chooseImage(event) {
-				let file = event.target.files[0];
-				console.log(file);
-				if (file.type != 'image/jpeg' && file.type != 'image/jpg') {
-					alert("ファイル形式は「png」または「jpg」を選択してください。");
-					return null;
-				}
-				if (file.size > 2048000) {
-					alert("最大ファイル「2mb」");
-				}
-				this.postImage = file;
-			},
-
-			async submit() {
-				// if (this.posts == '' || this.posts == null) {
-				//     alert("内容を入力してください。");
-				//     return null;
-				// }
-				let formData = new FormData();
-				formData.append('content', this.posts);
-				formData.append('image', this.postImage);
-				// Send to server
-				try {
-					const callAPI = await axios.post('http://localhost/wise_social_api/public/api/create-post',
-						formData, {
-						/************ Attach param for request here ***************/
-						headers: {
-							"Content-type": "application/form-data",
-							"Authorization": "Bearer " + this.token
-						}
-					});
-					if (callAPI.data.code == 200) {
-						console.log(callAPI.data.code);
-						return null;
-					} else {
-						alert("Call api failed, please check again!");
-					}
-				} catch (err) {
-					console.log(err);
-				}
-
-				console.log(this.posts);
-				console.log(this.postImage);
-			},
-
-
-			/**
-			 * Example default function using param
-			 *
-			 * @param int pageNum number of page
-			 * @return boolean
-			 */
-			defaultFunctionUsingParam(pageNum) {
-				console.log(pageNum);
-				return false;
-			},
-
-			/***********************************************************************************************************
-			 ******* Async and await functions for manipulating server-side data through internal API protocols ********
-			 **********************************************************************************************************/
-
-			/**
-			 * Call API sample
-			 */
-			async callAPI() {
-				try {
-					const callAPI = await axios.get('http://localhost/wise_social_api/public/api/list-user', {
-						/************ Attach param for request here ***************/
-						headers: {
-							"Content-type": "application/json",
-							"Authorization": "Bearer 28|TK2GDxdOitONowsftHVRRJhZeYFBZR2tQwdJjoSKfe2d9037"
-						}
-					});
-					if (callAPI.data.code == 200) {
-						this.users = callAPI.data.data;
-					} else {
-						alert("Call api failed, please check again!");
-					}
-				} catch (err) {
-					console.log(err);
-				}
-			},
-			async deleteUser(id) {
-				try {
-					const callAPI = await axios.delete('http://localhost/wise_social_api/public/api/delete-user/' + id, {
-						/************ Attach param for request here ***************/
-						headers: {
-							"Content-type": "application/json",
-							"Authorization": "Bearer 28|TK2GDxdOitONowsftHVRRJhZeYFBZR2tQwdJjoSKfe2d9037"
-						}
-					});
-					this.callAPI();
-				} catch (err) {
-					console.log(err);
-				}
-			},
-			/**
-			 *
-			 */
-			async timeLine() {
-				try {
-					const callAPI = await axios.get('http://localhost/wise_social_api/public/api/timeline', {
-						/************ Attach param for request here ***************/
-						headers: {
-							"Content-type": "application/json",
-							"Authorization": "Bearer " + this.token
-						},
-						params: {
-							offset: this.offset,
-							limit: this.limit
-						}
-					});
-					if (callAPI.data.code == 200) {
-						console.log(callAPI.data.code);
-						this.timelinePost = callAPI.data.data;
-					} else {
-						alert("Call api failed, please check again!");
-					}
-				} catch (err) {
-					console.log(err);
-				}
-			},
-
-			async favorite(postId) {
-				try {
-					const callAPI = await axios.get('http://localhost/wise_social_api/public/api/add-favorites', {
-						/************ Attach param for request here ***************/
-						headers: {
-							"Content-type": "application/json",
-							"Authorization": "Bearer " + this.token
-						},
-						params: {
-							post_id: postId
-						}
-					});
-					if (callAPI.data.code == 200) {
-						const index = this.timelinePost.findIndex(post => post.id === postId);
-						if (index !== -1) {
-							this.timelinePost[index].favorites.push({ post_id: postId });
-						}
-					} else {
-						alert("Call api failed, please check again!");
-					}
-				} catch (err) {
-					console.log(err);
-				}
-			},
-
-			async removeFavorite(postId) {
-				try {
-					const callAPI = await axios.get('http://localhost/wise_social_api/public/api/remove-favorites', {
-						/************ Attach param for request here ***************/
-						headers: {
-							"Content-type": "application/json",
-							"Authorization": "Bearer " + this.token
-						},
-						params: {
-							post_id: postId
-						}
-					});
-					if (callAPI.data.code == 200) {
-						const index = this.timelinePost.findIndex(post => post.id === postId);
-						if (index !== -1) {
-							this.timelinePost[index].favorites = [];
-						}
-					} else {
-						alert("Call api failed, please check again!");
-					}
-				} catch (err) {
-					console.log(err);
-				}
-			},
-
-			// Like method
-			async like(postId, action) {
-				try {
-					const callAPI = await axios.get('http://localhost/wise_social_api/public/api/like', {
-						/************ Attach param for request here ***************/
-						headers: {
-							"Content-type": "application/json",
-							"Authorization": "Bearer " + this.token
-						},
-						params: {
-							post_id: postId,
-							action: action
-						}
-					});
-					if (callAPI.data.code == 200) {
-						const index = this.timelinePost.findIndex(post => post.id === postId);
-						if (index != -1) {
-							this.timelinePost[index].favorites = [];
-							if (this.timelinePost[index].id == postId && action == 'like') {
-								this.timelinePost[index].is_like = 1;
-								this.timelinePost[index].total_like++;
-							}
-							if (this.timelinePost[index].id == postId && action == 'unlike') {
-								this.timelinePost[index].is_like = 0;
-								this.timelinePost[index].total_like--;
-							}
-						}
-					} else {
-						alert("Call API failed. Please check again!");
-					}
-				} catch (err) {
-					console.log(err);
-				}
-			},
-
-			// Show comment
-			async showComment(postId) {
-				this.selectedShowComment = postId;
-				this.parent = null;
-				this.replyingTo = null;
-				console.log(this.selectedShowComment);
-
-				try {
-					const callAPI = await axios.get('http://localhost/wise_social_api/public/api/list-comment', {
-						/************ Attach param for request here ***************/
-						headers: {
-							"Content-type": "application/json",
-							"Authorization": "Bearer " + this.token
-						},
-						params: {
-							post_id: postId,
-							offset: this.commentOffset,
-							limit: this.commentLimit
-						}
-					});
-					if (callAPI.data.code == 200) {
-						console.log(callAPI.data.data);
-						this.comments = callAPI.data.data;
-					} else {
-						console.log('Call API failed');
-					}
-				} catch (error) {
-					console.log(error);
-				}
-			},
-
-			// Send comment
-			async sendComment() {
-				let formData = new FormData();
-				formData.append('post_id', this.selectedShowComment);
-				formData.append('comment', this.comment);
-				formData.append('parent', this.parent);
-				await axios.post('http://localhost/wise_social_api/public/api/comment',
+		async submit() {
+			// if (this.posts == '' || this.posts == null) {
+			//     alert("内容を入力してください。");
+			//     return null;
+			// }
+			let formData = new FormData();
+			formData.append('content', this.posts);
+			formData.append('image', this.postImage);
+			// Send to server
+			try {
+				const callAPI = await axios.post('http://localhost/wise_social_api/public/api/create-post',
 					formData, {
 					/************ Attach param for request here ***************/
 					headers: {
-						"Content-type": "multipart/form-data",
+						"Content-type": "application/form-data",
 						"Authorization": "Bearer " + this.token
 					}
 				});
-				this.comment = "";
-			},
+				if (callAPI.data.code == 200) {
+					console.log(callAPI.data.code);
+					return null;
+				} else {
+					alert("Call api failed, please check again!");
+				}
+			} catch (err) {
+				console.log(err);
+			}
 
-			// Click reply
-			clickReply(parentId, replyingToName) {
-				this.parent = parentId;
-				this.replyingTo = replyingToName;
+			console.log(this.posts);
+			console.log(this.postImage);
+		},
+
+
+		/**
+		 * Example default function using param
+		 *
+		 * @param int pageNum number of page
+		 * @return boolean
+		 */
+		defaultFunctionUsingParam(pageNum) {
+			console.log(pageNum);
+			return false;
+		},
+
+		/***********************************************************************************************************
+		 ******* Async and await functions for manipulating server-side data through internal API protocols ********
+		 **********************************************************************************************************/
+
+		/**
+		 * Call API sample
+		 */
+		async callAPI() {
+			try {
+				const callAPI = await axios.get('http://localhost/wise_social_api/public/api/list-user', {
+					/************ Attach param for request here ***************/
+					headers: {
+						"Content-type": "application/json",
+						"Authorization": "Bearer 28|TK2GDxdOitONowsftHVRRJhZeYFBZR2tQwdJjoSKfe2d9037"
+					}
+				});
+				if (callAPI.data.code == 200) {
+					this.users = callAPI.data.data;
+				} else {
+					alert("Call api failed, please check again!");
+				}
+			} catch (err) {
+				console.log(err);
 			}
 		},
-	}
+		async deleteUser(id) {
+			try {
+				const callAPI = await axios.delete('http://localhost/wise_social_api/public/api/delete-user/' + id, {
+					/************ Attach param for request here ***************/
+					headers: {
+						"Content-type": "application/json",
+						"Authorization": "Bearer 28|TK2GDxdOitONowsftHVRRJhZeYFBZR2tQwdJjoSKfe2d9037"
+					}
+				});
+				this.callAPI();
+			} catch (err) {
+				console.log(err);
+			}
+		},
+		/**
+		 *
+		 */
+		async timeLine() {
+			try {
+				const callAPI = await axios.get('http://localhost/wise_social_api/public/api/timeline', {
+					/************ Attach param for request here ***************/
+					headers: {
+						"Content-type": "application/json",
+						"Authorization": "Bearer " + this.token
+					},
+					params: {
+						offset: this.offset,
+						limit: this.limit
+					}
+				});
+				if (callAPI.data.code == 200) {
+					console.log(callAPI.data.code);
+					this.timelinePost = callAPI.data.data;
+				} else {
+					alert("Call api failed, please check again!");
+				}
+			} catch (err) {
+				console.log(err);
+			}
+		},
+
+		async favorite(postId) {
+			try {
+				const callAPI = await axios.get('http://localhost/wise_social_api/public/api/add-favorites', {
+					/************ Attach param for request here ***************/
+					headers: {
+						"Content-type": "application/json",
+						"Authorization": "Bearer " + this.token
+					},
+					params: {
+						post_id: postId
+					}
+				});
+				if (callAPI.data.code == 200) {
+					const index = this.timelinePost.findIndex(post => post.id === postId);
+					if (index !== -1) {
+						this.timelinePost[index].favorites.push({ post_id: postId });
+					}
+				} else {
+					alert("Call api failed, please check again!");
+				}
+			} catch (err) {
+				console.log(err);
+			}
+		},
+
+		async removeFavorite(postId) {
+			try {
+				const callAPI = await axios.get('http://localhost/wise_social_api/public/api/remove-favorites', {
+					/************ Attach param for request here ***************/
+					headers: {
+						"Content-type": "application/json",
+						"Authorization": "Bearer " + this.token
+					},
+					params: {
+						post_id: postId
+					}
+				});
+				if (callAPI.data.code == 200) {
+					const index = this.timelinePost.findIndex(post => post.id === postId);
+					if (index !== -1) {
+						this.timelinePost[index].favorites = [];
+					}
+				} else {
+					alert("Call api failed, please check again!");
+				}
+			} catch (err) {
+				console.log(err);
+			}
+		},
+
+		// Like method
+		async like(postId, action) {
+			try {
+				const callAPI = await axios.get('http://localhost/wise_social_api/public/api/like', {
+					/************ Attach param for request here ***************/
+					headers: {
+						"Content-type": "application/json",
+						"Authorization": "Bearer " + this.token
+					},
+					params: {
+						post_id: postId,
+						action: action
+					}
+				});
+				if (callAPI.data.code == 200) {
+					const index = this.timelinePost.findIndex(post => post.id === postId);
+					if (index != -1) {
+						this.timelinePost[index].favorites = [];
+						if (this.timelinePost[index].id == postId && action == 'like') {
+							this.timelinePost[index].is_like = 1;
+							this.timelinePost[index].total_like++;
+						}
+						if (this.timelinePost[index].id == postId && action == 'unlike') {
+							this.timelinePost[index].is_like = 0;
+							this.timelinePost[index].total_like--;
+						}
+					}
+				} else {
+					alert("Call API failed. Please check again!");
+				}
+			} catch (err) {
+				console.log(err);
+			}
+		},
+
+		// Show comment
+		async showComment(postId) {
+			this.selectedShowComment = postId;
+			this.parent = 0;
+			this.replyingTo = null;
+			console.log(this.selectedShowComment);
+			this.$socket.emit('ClientSendMessageToServer', {
+				id: postId,
+				comment: "",
+				avatar: "",
+				name: "",
+				created_at: "2022-07-09 07:00:41",
+				updated_at: "2022-07-09 07:00:41",
+				parent_id: null,
+				child: null,
+				post_id: postId,
+				type: "comment",
+				action: "join"
+			});
+
+			try {
+				const callAPI = await axios.get('http://localhost/wise_social_api/public/api/list-comment', {
+					/************ Attach param for request here ***************/
+					headers: {
+						"Content-type": "application/json",
+						"Authorization": "Bearer " + this.token
+					},
+					params: {
+						post_id: postId,
+						offset: this.commentOffset,
+						limit: this.commentLimit
+					}
+				});
+				if (callAPI.data.code == 200) {
+					console.log(callAPI.data.data);
+					this.comments = callAPI.data.data;
+				} else {
+					console.log('Call API failed');
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		},
+
+		// Send comment
+		async sendComment() {
+			let formData = new FormData();
+			formData.append('post_id', this.selectedShowComment);
+			formData.append('comment', this.comment);
+			formData.append('parent', this.parent);
+			const callAPI = await axios.post('http://localhost/wise_social_api/public/api/comment',
+				formData, {
+				/************ Attach param for request here ***************/
+				headers: {
+					"Content-type": "multipart/form-data",
+					"Authorization": "Bearer " + this.token
+				}
+			});
+			this.comment = '';
+			let responseComment = callAPI.data.data;
+			this.$socket.emit(
+				'ClientSendMessageToServer',
+				responseComment
+			);
+		},
+
+		// Click reply
+		clickReply(parentId, replyingToName) {
+			this.parent = parentId;
+			this.replyingTo = replyingToName;
+		}
+	},
+}
 </script>
 
 <style>
-
-	/**
+/**
 * Custom local style css
 */
-	.txt-readmore:hover {
-		cursor: pointer;
-	}
+.txt-readmore:hover {
+	cursor: pointer;
+}
 
-	.posty {
-		margin-bottom: 24px;
-	}
+.posty {
+	margin-bottom: 24px;
+}
 </style>
