@@ -177,6 +177,26 @@
 	// import component2 from 'component2'
 
 	export default {
+		/**
+		 * Define global service socket
+		 *
+		 * Listing event from socket.io server
+		 * "ServerSendCommentToClient" is the name of the channel that sends notifications to all clients installed in the server socket
+		 */
+		sockets: {
+			// Send data to server
+			ClientSendCommentToServer: function (responseComment) {
+				this.comment = responseComment;
+			},
+			// Listen event from server and render data
+			ServerSendCommentToClient: function (responseComment) {
+				// Push to the comment list
+				if (responseComment.type === 'comment' && this.transaction.id == responseComment.transaction_id) {
+					this.pushCommentToList(responseComment);
+					this.$forceUpdate();
+				}
+			},
+		},
 		/***********************************************************************************************************
 		 ******************************* Pass data to child component **********************************************
 		 **********************************************************************************************************/
