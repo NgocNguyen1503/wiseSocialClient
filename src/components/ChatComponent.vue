@@ -11,7 +11,7 @@
             <!--msg-title end-->
             <div class="messages-list">
                 <ul>
-                    <li v-for="friend in friends">
+                    <li v-for="friend in friends" v-on:click="showBoxMsg(friend)">
                         <div class="usr-msg-details">
                             <div class="usr-ms-img">
                                 <img v-if="friend.avatar != null" :src="friend.avatar" alt="">
@@ -35,54 +35,35 @@
             <img class="fl-rgt" src="../assets/images/logo2.png" alt="">
         </div>
     </div>
-    <div class="chat-box">
+    <div class="chat-box" v-if="showChatBox">
         <div class="chat-box-head">
             <div class="chat-box-head-friend">
                 <img class="chat-box-friend-avatar" src="../assets/images/resources/s1.png" alt="">
-                <p>香野綾花</p>
+                <p>{{ this.selectedFriend?.name }}</p>
             </div>
-            <div class="chat-box-close">
+            <div class="chat-box-close" v-on:click="hideBoxMsg()">
                 <p class="fa fa-times"></p>
             </div>
         </div>
         <div class="chat-box-content">
-            <div class="my-msg">
-                <p>
-                    主ケキ膀認ねず務法債中際提けトイつ売ぞろ惜禁け割門9要ワキ家際ほもば木久まき容純菜ぎぽぞ載動宅略石れざきこ。
-                </p>
-                <span class="send-date">2024-12-26 11:56</span>
-            </div>
-            <div class="friend-msg">
-                <p>
-                    キ家際ほもば木久まき容純菜ぎぽぞ。
-                </p>
-                <span class="send-date">2024-12-26 11:56</span>
-            </div>
-            <div class="my-msg">
-                <p>
-                    中際提けトイつ売主ケキ膀認ねず務法債ぞろ惜禁け割門9要ワキ家際ほもば木久まき容純菜ぎぽぞ載動宅略石れざきこ。
-                </p>
-                <span class="send-date">2024-12-26 11:56</span>
-            </div>
-            <div class="my-msg">
-                <p>
-                    宅略石れざきこ。合そいやぶ間準ヌイヘミ罪高そ県1人スヲナ月7神いこ港彬ホヨアタ最非3争ミイホヘ生要きゅ熱覧ょ式司フホメ究真メスチコ革面じ訓準晶ぼフを。
-                </p>
-                <span class="send-date">2024-12-26 11:56</span>
-            </div>
-            <div class="friend-msg">
-                <p>
-                    月7神いこ港彬ホヨアタ最非3争ミイホヘ生要きゅ熱覧ょ式司フホメ。
-                </p>
-                <span class="send-date">2024-12-26 11:56</span>
+            <div class="listmsg" v-for="msg in listMessage">
+                <div class="my-msg" v-if="msg.my_message == 'me'">
+                    <p>{{ msg.message }}</p>
+                    <span class="send-date">{{ msg._created_at }}</span>
+                </div>
+                <div class="friend-msg" v-else>
+                    <p>{{ msg.message }}</p>
+                    <span class="send-date">{{ msg._created_at }}</span>
+                </div>
             </div>
         </div>
         <div class="chat-box-send-msg">
             <div class="chat-box-text-field">
-                <input type="text" class="form-control cls-text-field" placeholder="">
+                <input type="text" v-model="messageContent" class="form-control cls-text-field"
+                    placeholder="type your message">
             </div>
             <div class="chat-box-send-btn">
-                <i class="fa fa-send"></i>
+                <i class="fa fa-send" v-on:click="sendMessage()"></i>
             </div>
         </div>
     </div>
@@ -108,6 +89,11 @@ export default {
             msg: 'Hello world!',
             friends: [],
             token: sessionStorage.getItem("token"),
+            showChatBox: false,
+            selectedFriend: null,
+            listMessage: null,
+            roomId: 0,
+            messageContent: "",
         }
     },
     created() {
@@ -125,8 +111,8 @@ export default {
         /***********************************************************************************************************
          ********************************* Methods change value for a variable *************************************
          **********************************************************************************************************/
-        msg() {
-            console.log("When the value of the msg variable changes, this method will be executed.");
+        selectedFriend() {
+            this.getListMessage();
         }
     },
     computed: {
@@ -160,6 +146,63 @@ export default {
                 console.log(err);
             }
         },
+
+        showBoxMsg(friend) {
+            this.showChatBox = true;
+            this.selectedFriend = friend;
+        },
+
+        hideBoxMsg() {
+            this.showBoxMsg = false;
+            this.selectedFriend = null;
+        },
+
+        async getListMessage() {
+            try {
+                const callAPI = await axios.get('http://localhost/wise_social_api/public/api/list-message?friendId=' + this.selectedFriend.id, {
+                    /************ Attach param for request here ***************/
+                    headers: {
+                        "Content-type": "application/json",
+                        "Authorization": "Bearer " + this.token
+                    }
+                });
+                if (callAPI.data.code == 200) {
+                    this.listMessage = callAPI.data.data.messages;
+                    this.roomId = callAPI.data.data.room_id;
+                } else {
+                    alert("Call api failed, please check again!");
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        },
+
+        async sendMessage() {
+            try {
+                let formData = new FormData();
+                formData.append('friend_id', this.selectedFriend.id);
+                formData.append('room_id', this.roomId);
+                formData.append('message_content', this.messageContent);
+                const callAPI = await axios.post('http://localhost/wise_social_api/public/api/send-message',
+                    formData
+                    , {
+                        /************ Attach param for request here ***************/
+                        headers: {
+                            "Content-type": "multipart/form-data",
+                            "Authorization": "Bearer " + this.token
+                        }
+                    });
+                if (callAPI.data.code == 200) {
+                    console.log(callAPI.data.data.message);
+                    this.listMessage.push(callAPI.data.data)
+                    this.messageContent = "";
+                } else {
+                    alert("Call api failed, please check again!");
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        }
     },
 }
 </script>
