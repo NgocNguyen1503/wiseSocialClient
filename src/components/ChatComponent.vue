@@ -76,6 +76,20 @@ import axios from 'axios'
 // import component2 from 'component2'
 
 export default {
+    sockets: {
+        ClientSendMessageToServer: function (responseMessage) {
+            this.messageContent = responseMessage;
+        },
+        ServerSendMessageToClient: function (responseMessage) {
+            if (responseMessage.type === 'message') {
+                if (responseMessage.user_id == this.selectedFriend.id) {
+                    responseMessage.my_message = "friend";
+                }
+                this.listMessage.push(responseMessage);
+                this.$forceUpdate();
+            }
+        },
+    },
     /***********************************************************************************************************
      ******************************* Pass data to child component **********************************************
      **********************************************************************************************************/
@@ -150,6 +164,21 @@ export default {
         showBoxMsg(friend) {
             this.showChatBox = true;
             this.selectedFriend = friend;
+            let dataMsgSendToSocket = {
+                "id": 0,
+                "name": "",
+                "avatar": "user-pro-img.png",
+                "message": "",
+                "user_id": "",
+                "friend_id": "",
+                "is_view": 0,
+                "created_at": "",
+                "my_message": "me",
+                "_created_at": "",
+                "room_id": this.roomId,
+                // "type" => "message",
+                // "action" => "send-message",
+            };
         },
 
         hideBoxMsg() {
@@ -169,6 +198,25 @@ export default {
                 if (callAPI.data.code == 200) {
                     this.listMessage = callAPI.data.data.messages;
                     this.roomId = callAPI.data.data.room_id;
+                    let dataMsgSentToSocket = {
+                        "id": 0,
+                        "name": "",
+                        "avatar": "",
+                        "message": "",
+                        "user_id": "",
+                        "friend_id": "",
+                        "is_view": 0,
+                        "created_at": "",
+                        "my_message": "me",
+                        "_created_at": "",
+                        "room_id": this.roomId,
+                        "type": "message",
+                        "action": "join"
+                    }
+                    this.$socket.emit(
+                        'ClientSendMessageToServer',
+                        dataMsgSentToSocket
+                    );
                 } else {
                     alert("Call api failed, please check again!");
                 }
@@ -193,9 +241,11 @@ export default {
                         }
                     });
                 if (callAPI.data.code == 200) {
-                    console.log(callAPI.data.data.message);
-                    this.listMessage.push(callAPI.data.data)
                     this.messageContent = "";
+                    this.$socket.emit(
+                        'ClientSendMessageToServer',
+                        callAPI.data.data
+                    );
                 } else {
                     alert("Call api failed, please check again!");
                 }

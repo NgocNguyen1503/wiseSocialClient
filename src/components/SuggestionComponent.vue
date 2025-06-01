@@ -6,20 +6,14 @@
     <!--sd-title end-->
     <div class="suggestions-list">
       <div v-for="friend in suggestFriend" class="suggestion-usd">
-        <img
-          v-if="friend.avatar == null"
-          src="../assets/images/resources/s1.png"
-          alt=""
-        />
+        <img v-if="friend.avatar == null" src="../assets/images/resources/s1.png" alt="" />
         <img v-else :src="friend.avatar" alt="" />
         <div class="sgt-text">
           <h4>{{ friend.name }}</h4>
           <span>{{ friend.experience }}</span>
         </div>
-        <span 
-          v-on:click="!isAddingFriend[friend.id] && addFriend(friend.id)"
-          :class="{ 'disabled': isAddingFriend[friend.id] }"
-        >
+        <span v-on:click="!isAddingFriend[friend.id] && addFriend(friend.id)"
+          :class="{ 'disabled': isAddingFriend[friend.id] }">
           <i class="fa fa-plus"></i>
         </span>
       </div>
